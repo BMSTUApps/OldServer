@@ -30,7 +30,7 @@ class Class(models.Model):
     end_time = models.TimeField()
 
     # День (необходим для связи в БД)
-    day = models.ForeignKey("Day", related_name='classes')
+    day = models.ForeignKey("Day", related_name='classes', on_delete=models.PROTECT)
 
     def __str__(self):
         return "%s (%s) %s-%s" % (self.name, self.location, self.start_time, self.end_time)
@@ -45,5 +45,21 @@ class Day(models.Model):
     # Номер дня в неделе
     number = models.IntegerField()
 
+    # Неделя (необходима для связи в БД)
+    week = models.ForeignKey("Week", related_name='days', on_delete=models.PROTECT)
+
     def __str__(self):
         return "Учебный день №%i (%i занятий)" % (self.number, self.classes.count())
+
+
+class Week(models.Model):
+    """ Учебный неделя """
+
+    class Meta:
+        db_table = 'server_app_week'
+
+    # Тип: числитель/знаменатель
+    type = models.CharField(max_length=30)
+
+    def __str__(self):
+        return "Учебный неделя (%i учебных дней)" % (self.days.count())
