@@ -132,9 +132,6 @@ class Group(models.Model):
     # На каком курсе группа
     course = models.CharField(max_length=15)
 
-    # Расписание группы
-    schedule = models.ForeignKey('Schedule', related_name='group', on_delete=models.PROTECT)
-
     # Сокращённое название группы
     short_name = models.CharField(max_length=15)
 
@@ -149,25 +146,19 @@ class Teacher(models.Model):
         db_table = 'server_app_teacher'
 
     # Фотка препода (пока что хз насчёт того, куда будет подгружаться, пока без upload_to)
-    image = models.ImageField(null=True, on_delete=models.PROTECT)
+    image = models.ImageField(null=True)
 
     # Имя препода
-    first_name = models.CharField(max_length=30, on_delete=models.PROTECT)
+    first_name = models.CharField(max_length=30)
 
     # Фамилия препода
-    last_name = models.CharField(max_length=30, on_delete=models.PROTECT)
+    last_name = models.CharField(max_length=30)
 
     # Отчество препода
-    middle_name = models.CharField(max_length=30, on_delete=models.PROTECT)
+    middle_name = models.CharField(max_length=30)
 
     # Повадки препода, особенности поведения (будет браться с бомонки.нет)
-    description = models.CharField(max_length=150, on_delete=models.PROTECT)
-
-    # Кафедра, на которой работает препод
-    department = models.ForeignKey("Department", related_name='teacher', on_delete=models.PROTECT)
-
-    # Список занятий препода
-    classes = models.ForeignKey("Class", related_name='teacher', on_delete=models.PROTECT)
+    description = models.CharField(max_length=150)
 
     def __str__(self):
         return "{} {} {}".format(self.last_name, self.first_name, self.middle_name)
