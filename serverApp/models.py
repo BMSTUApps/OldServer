@@ -73,7 +73,7 @@ class Schedule(models.Model):
     # Группа
     group = models.ForeignKey("Group", related_name='schedule', on_delete=models.PROTECT)
 
-    # TODO: Я хз пока что, как правильно сделать связи, чтобы была два массива дней. Видимо надо делать свойство у недели, которое будет показывать числитель это или знаменатель.
+    # TODO: Я хз пока что, как правильно сделать связи, чтобы было два массива дней. Видимо надо делать свойство у недели, которое будет показывать числитель это или знаменатель.
 
     # Неделя числителя (необходима для связи в БД)
     # numerator = models.ForeignKey("Week", related_name='numerator', on_delete=models.PROTECT)
