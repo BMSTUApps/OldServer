@@ -5,6 +5,7 @@ venv/include
 venv/lib
 venv/local
 venv/pip-selfcheck.json
+venv/*
 *.log
 *.pot
 *.pyc
@@ -14,7 +15,7 @@ media
 
 ### PyCharm ###
 .idea/workspace.xml
-.idea/tasks.xml
+.idea/**/tasks.xml
 .idea/dictionaries
 .idea/**/dataSources/
 .idea/**/dataSources.ids
