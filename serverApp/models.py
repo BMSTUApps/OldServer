@@ -74,7 +74,7 @@ class Schedule(models.Model):
         db_table = 'server_app_schedule'
 
     # Группа
-    group = models.ForeignKey("Group", related_name='schedule', on_delete=models.PROTECT)
+    group = models.OneToOneField("Group", on_delete=models.CASCADE)
 
     def __str__(self):
         return "Учебная неделя (%i учебных дней)" % (self.days.count())
