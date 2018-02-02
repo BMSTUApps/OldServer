@@ -12,6 +12,7 @@ venv/*
 __pycache__/
 local_settings.py
 media
+serverApp/migrations/*py
 
 ### PyCharm ###
 .idea/workspace.xml
