@@ -1,6 +1,5 @@
-from serverApp import models
-from serverApp import schedule_loader
-from serverApp import schedule_parser
+from serverApp.schedule_loader import ScheduleLoader
+from serverApp.schedule_parser import ScheduleParser
 
 
 class ScheduleManager:

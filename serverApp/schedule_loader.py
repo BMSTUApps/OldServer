@@ -4,7 +4,7 @@ import requests
 class ScheduleLoader:
 
     def __init__(self):
-        self.api_address = "raspisanie.bmstu.ru:8088/api/"
+        self.api_address = "http://raspisanie.bmstu.ru:8088/api/"
 
     def load_schedule(self, faculty, department, course, group):
 
@@ -13,5 +13,6 @@ class ScheduleLoader:
 
         # Делаем запрос
         request = requests.get(request_string)
+        print("Делаем запрос " + request_string)
 
-        return request.status_code, request.json
+        return request.json()
