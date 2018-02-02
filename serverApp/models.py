@@ -30,6 +30,11 @@ class Class(models.Model):
 
     # День (необходим для связи в БД)
     day = models.ForeignKey("Day", related_name='classes', on_delete=models.PROTECT)
+    
+    def __init__(self, json):
+        super(Class, self).__init__()
+        self.location = str(json['studyClassRoom'])
+        self.name = str(json['studyClassTitle'])
 
     def __str__(self):
         return "%s (%s) %s-%s" % (self.name, self.location, self.start_time, self.end_time)
@@ -159,6 +164,10 @@ class Teacher(models.Model):
 
     # Повадки препода, особенности поведения (будет браться с бомонки.нет)
     description = models.CharField(max_length=150)
+
+    def __init__(self, json):
+        models.Model.__init__(self)
+        self.last_name = str(json['studyClassLecturer']).split(' ')[0]
 
     def __str__(self):
         return "{} {} {}".format(self.last_name, self.first_name, self.middle_name)
