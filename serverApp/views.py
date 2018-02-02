@@ -4,7 +4,7 @@ from django.http import HttpResponse
 
 import json
 
-from serverApp.schedule_manager import ScheduleManager
+from serverApp.managers import ScheduleManager
 
 
 # Тестовая страница
