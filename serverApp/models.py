@@ -65,6 +65,9 @@ class Week(models.Model):
     # Тип: числитель/знаменатель
     type = models.CharField(max_length=30)
 
+    # Расписание (необходимо для связи в БД)
+    week = models.ForeignKey("Schedule", related_name='weeks', on_delete=models.PROTECT)
+
     def __str__(self):
         return "Учебная неделя (%i учебных дней)" % (self.days.count())
 
@@ -76,15 +79,7 @@ class Schedule(models.Model):
         db_table = 'server_app_schedule'
 
     # Группа
-    group = models.ForeignKey("Group", related_name='schedule', on_delete=models.PROTECT)
-
-    # TODO: Я хз пока что, как правильно сделать связи, чтобы было два массива дней. Видимо надо делать свойство у недели, которое будет показывать числитель это или знаменатель.
-
-    # Неделя числителя (необходима для связи в БД)
-    # numerator = models.ForeignKey("Week", related_name='numerator', on_delete=models.PROTECT)
-
-    # Неделя знаменателя (необходима для связи в БД)
-    # denominator = models.ForeignKey("Week", related_name='denominator', on_delete=models.PROTECT)
+    group = models.OneToOneField("Group", on_delete=models.CASCADE)
 
     def __str__(self):
         return "Учебная неделя (%i учебных дней)" % (self.days.count())
