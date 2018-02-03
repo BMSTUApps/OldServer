@@ -5,6 +5,13 @@ class ScheduleParser:
 
     def parse(self, json):
 
+        # Разбиваем все занятия на две недели (числитель и знаменатель).
+        json = self.devide(json=json)
+
+        return json
+
+    def devide(self, json):
+
         days = json[0]['studyWeek']
 
         # Разбиваем все занятия на две недели (числитель и знаменатель).
