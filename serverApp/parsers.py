@@ -6,11 +6,14 @@ class ScheduleParser:
     def parse(self, json):
 
         # Разбиваем все занятия на две недели (числитель и знаменатель).
-        json = self.devide(json=json)
+        json = self.divide(json=json)
+
+        # Удаляем ненужные символы.
+        json = self.remove_symbols(json=json)
 
         return json
 
-    def devide(self, json):
+    def divide(self, json):
 
         days = json[0]['studyWeek']
 
@@ -62,3 +65,9 @@ class ScheduleParser:
             denominator_days.append(denominator_day)
 
         return {"nominator": nominator_days, "denominator": denominator_days}
+
+    def remove_symbols(self, json):
+
+        # Удаляем ненужные символы.
+
+        return json
