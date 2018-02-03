@@ -3,24 +3,55 @@ from serverApp import models
 
 class ScheduleParser:
 
-    def __init__(self, json={}):
-        self.schedule_json = json
+    def parse(self, json):
 
-    # разбиваем недели на числители и знаменатели
-    def parse(self):
-        json = self.schedule_json
-        whole_week = json[0]['studyWeek']
-        nominator = whole_week[:]
-        denominator = whole_week[:]
+        days = json[0]['studyWeek']
 
-        for day in whole_week:
-            for period in day['periods']:
-                for studyClass in period['studyClasses']:
-                    if studyClass['type'] == 'nominator':
-                        denominator[whole_week.index(day)]['periods'][day['periods'].index(period)]['studyClasses'][
-                            period['studyClasses'].index(studyClass)] = {}
-                    elif studyClass['type'] == 'denominator':
-                        nominator[whole_week.index(day)]['periods'][day['periods'].index(period)]['studyClasses'][
-                            period['studyClasses'].index(studyClass)] = {}
+        # Разбиваем все занятия на две недели (числитель и знаменатель).
 
-        return [nominator, denominator]
+        nominator_days = []
+        denominator_days = []
+
+        for day in days:
+
+            periods = day["periods"]
+            nominator_periods = []
+            denominator_periods = []
+
+            for period in periods:
+
+                study_classes = period["studyClasses"]
+                nominator_classes = []
+                denominator_classes = []
+
+                for study_class in study_classes:
+
+                    study_class_type = study_class["type"]
+
+                    if study_class_type == "nominator":
+                        nominator_classes.append(study_class)
+
+                    elif study_class_type == "denominator":
+                        denominator_classes.append(study_class)
+
+                    else:
+                        nominator_classes.append(study_class)
+                        denominator_classes.append(study_class)
+
+                nominator_period = dict(period)
+                nominator_period["studyClasses"] = nominator_classes
+                nominator_periods.append(nominator_period)
+
+                denominator_period = dict(period)
+                denominator_period["studyClasses"] = denominator_classes
+                denominator_periods.append(denominator_period)
+
+            nominator_day = dict(day)
+            nominator_day["periods"] = nominator_periods
+            nominator_days.append(nominator_day)
+
+            denominator_day = dict(day)
+            denominator_day["periods"] = denominator_periods
+            denominator_days.append(denominator_day)
+
+        return {"nominator": nominator_days, "denominator": denominator_days}
