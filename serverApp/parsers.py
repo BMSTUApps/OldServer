@@ -118,4 +118,7 @@ class ScheduleParser:
         if string[-1] == " ":
             string = string[:-1]
 
+        # Первые буквы слов делаем заглавными.
+        string = string.title()
+
         return string
