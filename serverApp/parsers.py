@@ -1,4 +1,4 @@
-from serverApp import models
+from serverApp.models import Schedule
 
 
 class ScheduleParser:
@@ -122,3 +122,13 @@ class ScheduleParser:
         string = string.title()
 
         return string
+
+    def create_model(self, json):
+
+        # Создаем модель расписания из json'а.
+
+        schedule = Schedule()
+
+        # Заполняем модель
+
+        return schedule
