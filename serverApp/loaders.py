@@ -60,7 +60,7 @@ class ScheduleLoader(BaseLoader):
 
         response_path = settings.TEMPLATE_DIRS[0] + "schedule_response.json"
 
-        with open(response_path) as json_data:
+        with open(response_path, encoding='utf-8') as json_data:
             response = json.load(json_data)
 
         return response
