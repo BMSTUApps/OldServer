@@ -17,8 +17,10 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from serverApp.views import MainView
+from serverApp.api_views import ScheduleView
 
 urlpatterns = [
     url(r'^$', MainView.as_view()),
+    url(r'^api/schedule/', ScheduleView.as_view()),
     url(r'^admin/', admin.site.urls),
 ]

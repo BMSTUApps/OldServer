@@ -15,6 +15,10 @@ class ScheduleParser:
 
     def divide(self, json):
 
+        json_list = list(json)
+        if len(json_list) == 0:
+            return {"nominator": None, "denominator": None}
+
         days = json[0]['studyWeek']
 
         # Разбиваем все занятия на две недели (числитель и знаменатель).
