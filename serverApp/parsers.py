@@ -5,11 +5,21 @@ class ScheduleParser:
 
     def parse(self, json):
 
+        # JSON Layer
+
         # Разбиваем все занятия на две недели (числитель и знаменатель).
         json = self.divide(json=json)
 
         # Удаляем ненужные символы.
         json = self.remove_symbols(json=json)
+
+        # Models Layer
+
+        # Пока не готова БД уровня с моделями не будет.
+        # Поэтому на этом уровне мы будем видоизменять JSON в нужный вид.
+        # Подробности тут - github.com/BMSTUScheduleTeam/BMSTUScheduleServer/issues/9
+
+        json = self.transform_json(json=json)
 
         return json
 
@@ -136,3 +146,9 @@ class ScheduleParser:
         # Заполняем модель
 
         return schedule
+
+    def transform_json(self, json):
+
+        # Видоизменяем json..
+
+        return json
