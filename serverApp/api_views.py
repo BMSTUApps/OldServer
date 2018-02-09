@@ -6,6 +6,9 @@ import math
 
 from serverApp.managers import ScheduleManager
 
+# Создавать менеджер тут не надо, он будет один на приложение и создаваться автоматически совсем в другом месте.
+manager = ScheduleManager()
+
 
 # Экранированный запрос
 class ScheduleView(View):
@@ -21,9 +24,6 @@ class ScheduleView(View):
         group = int(groups_elements[-1])
         course = int(math.ceil(int(group/10)/2.0))
 
-        # Создавать менеджер тут не надо, он будет один на приложение и создаваться автоматически совсем в другом месте.
-        manager = ScheduleManager()
-
         # Запрос на "raspisanie.bmstu.ru".
         response = manager.loader.load_schedule(faculty=faculty, department=department, course=course, group=group)
 
@@ -34,6 +34,18 @@ class ScheduleView(View):
         parsed_response = manager.parser.parse(json=response)
 
         return HttpResponse(
-            json.dumps(parsed_response),
+            json.dumps(parsed_response, ensure_ascii=False),
+            content_type="application/json"
+        )
+
+
+class WeekView(View):
+
+    def get(self, request):
+
+        response = {"week_number": manager.current_week_number(), "week_type": manager.current_week_type()}
+
+        return HttpResponse(
+            json.dumps(response, ensure_ascii=False),
             content_type="application/json"
         )

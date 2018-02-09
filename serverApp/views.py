@@ -28,6 +28,6 @@ class MainView(View):
         print("Знаменатель: " + str(response_dict["denominator"]))
 
         return HttpResponse(
-            json.dumps(response),
+            json.dumps(response, ensure_ascii=False),
             content_type="application/json"
         )
