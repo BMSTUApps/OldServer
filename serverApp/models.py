@@ -32,7 +32,7 @@ class Class(models.Model):
     day = models.ForeignKey("Day", related_name='classes', on_delete=models.PROTECT)
     
     def __init__(self, json):
-        super(Class, self).__init__()
+        models.Model.__init__(self)
         self.location = str(json['studyClassRoom'])
         self.name = str(json['studyClassTitle'])
 
@@ -160,7 +160,7 @@ class Teacher(models.Model):
     # Повадки препода, особенности поведения (будет браться с бомонки.нет)
     description = models.CharField(max_length=150)
 
-    def __init__(self, json):
+    def __init__(self, json={}):
         models.Model.__init__(self)
         self.last_name = str(json['studyClassLecturer']).split(' ')[0]
 

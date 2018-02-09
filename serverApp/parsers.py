@@ -1,4 +1,5 @@
 from serverApp.models import Schedule
+import random
 
 
 class ScheduleParser:
@@ -152,3 +153,52 @@ class ScheduleParser:
         # Видоизменяем json..
 
         return json
+
+    # Метод для преобразования расписания в нужный формат
+    def data_organization(self, response_dict, group="ИУ5-63"):
+
+        new_dict = dict()
+        new_dict['group'] = group
+        new_dict['week'] = []
+        ind_week = 0
+
+        for week_type in response_dict:
+            new_dict['week'].append({})
+            new_dict['week'][ind_week]['id'] = random.randint(1, 10000)
+            new_dict['week'][ind_week]['number'] = random.randint(1, 10000)
+            new_dict['week'][ind_week]['type'] = week_type
+            new_dict['week'][ind_week]['days'] = []
+            ind_day = 0
+            for day in response_dict[str(week_type)]:
+                new_dict['week'][ind_week]['days'].append({})
+                new_dict['week'][ind_week]['days'][ind_day]['id'] = random.randint(1, 10000)
+                new_dict['week'][ind_week]['days'][ind_day]['name'] = day['title']
+                new_dict['week'][ind_week]['days'][ind_day]['classes'] = []
+                ind_class = 0
+                for period in day['periods']:
+                    new_dict['week'][ind_week]['days'][ind_day]['classes'].append({})
+                    if period['studyClasses'] != []:
+                        new_dict['week'][ind_week]['days'][ind_day]['classes'][ind_class]['id'] = \
+                            random.randint(1, 10000)
+                        new_dict['week'][ind_week]['days'][ind_day]['classes'][ind_class]['name'] = \
+                            period['studyClasses'][0]['studyClassTitle']
+                        # В скобках обычно пишут тип занятия
+                        new_dict['week'][ind_week]['days'][ind_day]['classes'][ind_class]['type'] = \
+                            str(period['studyClasses'][0]['studyClassTitle']).split(' ')[0]
+                        new_dict['week'][ind_week]['days'][ind_day]['classes'][ind_class]['location'] = \
+                            period['studyClasses'][0]['studyClassRoom']
+                        new_dict['week'][ind_week]['days'][ind_day]['classes'][ind_class]['teacher'] = \
+                            period['studyClasses'][0]['studyClassLecturer']
+                        new_dict['week'][ind_week]['days'][ind_day]['classes'][ind_class]['teacher_id'] = \
+                            random.randint(1, 10000)
+                        # Пока что решил не запариваться, накидать до кучи время начала занятия
+                        new_dict['week'][ind_week]['days'][ind_day]['classes'][ind_class]['start_time'] = \
+                            random.randint(1, 10000)
+                        # Пока что решил не запариваться, накидать до кучи время окончания занятия
+                        new_dict['week'][ind_week]['days'][ind_day]['classes'][ind_class]['end_time'] = \
+                            random.randint(1, 10000)
+                        ind_class += 1
+                ind_day += 1
+            ind_week += 1
+
+        return new_dict
