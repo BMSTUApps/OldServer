@@ -164,17 +164,23 @@ class ScheduleParser:
 
         ind_week = 0
 
-        for week_type in json:
+        for current_week_type in json:
 
             new_dict[weeks_key].append({})
             new_dict[weeks_key][ind_week]['id'] = random.randint(1, 10000)
-            new_dict[weeks_key][ind_week]['number'] = random.randint(1, 10000)
-            new_dict[weeks_key][ind_week]['type'] = week_type
+
+            # Устанавливаем номер недели.
+            if current_week_type == week_type:
+                new_dict[weeks_key][ind_week]['number'] = week_number
+            else:
+                new_dict[weeks_key][ind_week]['number'] = week_number + 1
+
+            new_dict[weeks_key][ind_week]['type'] = current_week_type
             new_dict[weeks_key][ind_week][days_key] = []
 
             ind_day = 0
 
-            for day in json[str(week_type)]:
+            for day in json[str(current_week_type)]:
 
                 new_dict[weeks_key][ind_week][days_key].append({})
                 new_dict[weeks_key][ind_week][days_key][ind_day]['id'] = random.randint(1, 10000)
@@ -202,12 +208,14 @@ class ScheduleParser:
                             period['studyClasses'][0]['studyClassLecturer']
                         new_dict[weeks_key][ind_week][days_key][ind_day][classes_key][ind_class]['teacher_id'] = \
                             random.randint(1, 10000)
-                        # Пока что решил не запариваться, накидать до кучи время начала занятия
+
+                        # Получаем время из номера пары.
+                        class_number = list(day['periods']).index(period)
+                        time_dict = self.time_for_number(class_number)
                         new_dict[weeks_key][ind_week][days_key][ind_day][classes_key][ind_class]['start_time'] = \
-                            random.randint(1, 10000)
-                        # Пока что решил не запариваться, накидать до кучи время окончания занятия
+                            time_dict['start_time']
                         new_dict[weeks_key][ind_week][days_key][ind_day][classes_key][ind_class]['end_time'] = \
-                            random.randint(1, 10000)
+                            time_dict['end_time']
 
                         ind_class += 1
 
@@ -215,4 +223,38 @@ class ScheduleParser:
 
             ind_week += 1
 
+        # Выставляем недели в нужном порядке
+        new_dict[weeks_key] = sorted(new_dict[weeks_key], key=lambda x: x['number'])
+
         return new_dict
+
+    def time_for_number(self, number):
+
+        # Получаем время из номера пары.
+
+        start_time = "null"
+        end_time = "null"
+
+        if number == 0:
+            start_time = "8:30"
+            end_time = "10:15"
+        elif number == 1:
+            start_time = "10:25"
+            end_time = "11:50"
+        elif number == 2:
+            start_time = "12:00"
+            end_time = "13:35"
+        elif number == 3:
+            start_time = "13:50"
+            end_time = "15:25"
+        elif number == 4:
+            start_time = "15:40"
+            end_time = "17:15"
+        elif number == 5:
+            start_time = "17:25"
+            end_time = "19:00"
+        elif number == 6:
+            start_time = "19:10"
+            end_time = "20:45"
+
+        return {"start_time": start_time, "end_time": end_time}
