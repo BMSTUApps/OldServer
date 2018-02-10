@@ -135,9 +135,6 @@ class ScheduleParser:
         if string[-1] == " ":
             string = string[:-1]
 
-        # Первые буквы слов делаем заглавными.
-        string = string.title()
-
         return string
 
     def create_model(self, json):
@@ -195,16 +192,24 @@ class ScheduleParser:
                     if len(period['studyClasses']) > 0:
 
                         new_dict[weeks_key][ind_week][days_key][ind_day][classes_key].append({})
-
                         new_dict[weeks_key][ind_week][days_key][ind_day][classes_key][ind_class]['id'] = \
                             random.randint(1, 10000)
+
+                        # Получаем название.
                         new_dict[weeks_key][ind_week][days_key][ind_day][classes_key][ind_class]['name'] = \
-                            period['studyClasses'][0]['studyClassTitle']
-                        # В скобках обычно пишут тип занятия
+                            self.class_name(period['studyClasses'][0]['studyClassTitle'])
+
+                        # Получаем тип.
                         new_dict[weeks_key][ind_week][days_key][ind_day][classes_key][ind_class]['type'] = \
                             self.class_type(str(period['studyClasses'][0]['studyClassTitle']))
+
+                        # Получаем расположение.
+                        class_name = period['studyClasses'][0]['studyClassTitle']
+                        class_location_string = period['studyClasses'][0]['studyClassRoom']
                         new_dict[weeks_key][ind_week][days_key][ind_day][classes_key][ind_class]['location'] = \
-                            period['studyClasses'][0]['studyClassRoom']
+                            self.class_location(string=class_location_string, name=class_name)
+
+                        # Получаем преподавателя.
                         new_dict[weeks_key][ind_week][days_key][ind_day][classes_key][ind_class]['teacher'] = \
                             period['studyClasses'][0]['studyClassLecturer']
                         new_dict[weeks_key][ind_week][days_key][ind_day][classes_key][ind_class]['teacher_id'] = \
@@ -229,13 +234,57 @@ class ScheduleParser:
 
         return new_dict
 
+    def class_name(self, string):
+
+        # Удаляем сведения о тип занятия.
+        start_bracket = str(string).find("(")
+        end_bracket = str(string).find(")")
+        if start_bracket != -1 and end_bracket != -1:
+            name = string[0:start_bracket] + string[end_bracket+2:]
+        else:
+            name = string
+
+        # Если всё название капсом, то убираем это.
+        if name == name.upper():
+            name = name.lower()
+
+        # Делаем первое слово с заглавной буквы.
+        words = name.split(" ")
+        words[0] = str(words[0]).capitalize()
+        name = " ".join(words)
+
+        # Физическую культуру любят по-разному писать,
+        # поэтому проверим вот таким вот образом и напишем нормально.
+        if "физ" in name.lower() and "культ" in name.lower():
+            name = "Физическая культура"
+
+        # Иностранный язык всегда обозначается как "ИНО 1/2".
+        if "ино" in name.lower() and "1/2" in name.lower():
+            name = "Иностранный язык 1/2"
+
+        return name
+
+    def class_location(self, string, name=None):
+
+        if string is None and name is not None:
+            if "ино" in name.lower() and "1/2" in name.lower():
+                words = name.split(" ")
+
+                for word in words:
+                    has_digit = any(ch.isdigit() for ch in word)
+                    has_char = any(ch.isalpha() for ch in word)
+
+                    if has_digit and has_char:
+                        string = word
+
+        return str(string).lower()
+
     def class_type(self, string):
 
         type_string = re.search(r"\((\w+)\)", string)
         type_value = "null"
 
         if not type_string:
-            print("not type_string")
             type_string = string.lower()
         else:
             type_string = str(type_string.group(1)).lower()
