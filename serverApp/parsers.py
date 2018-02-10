@@ -1,5 +1,6 @@
 from serverApp.models import Schedule
 import random
+import re
 
 
 class ScheduleParser:
@@ -201,7 +202,7 @@ class ScheduleParser:
                             period['studyClasses'][0]['studyClassTitle']
                         # В скобках обычно пишут тип занятия
                         new_dict[weeks_key][ind_week][days_key][ind_day][classes_key][ind_class]['type'] = \
-                            str(period['studyClasses'][0]['studyClassTitle']).split(' ')[0]
+                            self.class_type(str(period['studyClasses'][0]['studyClassTitle']))
                         new_dict[weeks_key][ind_week][days_key][ind_day][classes_key][ind_class]['location'] = \
                             period['studyClasses'][0]['studyClassRoom']
                         new_dict[weeks_key][ind_week][days_key][ind_day][classes_key][ind_class]['teacher'] = \
@@ -211,7 +212,7 @@ class ScheduleParser:
 
                         # Получаем время из номера пары.
                         class_number = list(day['periods']).index(period)
-                        time_dict = self.time_for_number(class_number)
+                        time_dict = self.class_time(class_number)
                         new_dict[weeks_key][ind_week][days_key][ind_day][classes_key][ind_class]['start_time'] = \
                             time_dict['start_time']
                         new_dict[weeks_key][ind_week][days_key][ind_day][classes_key][ind_class]['end_time'] = \
@@ -228,7 +229,27 @@ class ScheduleParser:
 
         return new_dict
 
-    def time_for_number(self, number):
+    def class_type(self, string):
+
+        type_string = re.search(r"\((\w+)\)", string)
+        type_value = "null"
+
+        if not type_string:
+            print("not type_string")
+            type_string = string.lower()
+        else:
+            type_string = str(type_string.group(1)).lower()
+
+        if "лек" in type_string:
+            type_value = "lecture"
+        elif "лаб" in type_string:
+            type_value = "lab"
+        elif "сем" in type_string:
+            type_value = "seminar"
+
+        return type_value
+
+    def class_time(self, number):
 
         # Получаем время из номера пары.
 
