@@ -4,12 +4,12 @@ import random
 
 class ScheduleParser:
 
-    def parse(self, json):
+    def parse(self, schedule_json, group):
 
         # JSON Layer
 
         # Разбиваем все занятия на две недели (числитель и знаменатель).
-        json = self.divide(json=json)
+        json = self.divide(json=schedule_json)
 
         # Удаляем ненужные символы.
         json = self.remove_symbols(json=json)
@@ -20,7 +20,7 @@ class ScheduleParser:
         # Поэтому на этом уровне мы будем видоизменять JSON в нужный вид.
         # Подробности тут - github.com/BMSTUScheduleTeam/BMSTUScheduleServer/issues/9
 
-        json = self.transform_json(json=json)
+        json = self.transform_json(json=json, group=group)
 
         return json
 
@@ -148,28 +148,23 @@ class ScheduleParser:
 
         return schedule
 
-    def transform_json(self, json):
+    def transform_json(self, json, group):
 
-        # Видоизменяем json..
-
-        return json
-
-    # Метод для преобразования расписания в нужный формат
-    def data_organization(self, response_dict, group="ИУ5-63"):
+        # Метод для преобразования расписания в нужный формат.
 
         new_dict = dict()
         new_dict['group'] = group
         new_dict['week'] = []
         ind_week = 0
 
-        for week_type in response_dict:
+        for week_type in json:
             new_dict['week'].append({})
             new_dict['week'][ind_week]['id'] = random.randint(1, 10000)
             new_dict['week'][ind_week]['number'] = random.randint(1, 10000)
             new_dict['week'][ind_week]['type'] = week_type
             new_dict['week'][ind_week]['days'] = []
             ind_day = 0
-            for day in response_dict[str(week_type)]:
+            for day in json[str(week_type)]:
                 new_dict['week'][ind_week]['days'].append({})
                 new_dict['week'][ind_week]['days'][ind_day]['id'] = random.randint(1, 10000)
                 new_dict['week'][ind_week]['days'][ind_day]['name'] = day['title']

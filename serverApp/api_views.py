@@ -25,13 +25,13 @@ class ScheduleView(View):
         manager = ScheduleManager()
 
         # Запрос на "raspisanie.bmstu.ru".
-        response = manager.loader.load_schedule(faculty=faculty, department=department, course=course, group=group)
+        #response = manager.loader.load_schedule(faculty=faculty, department=department, course=course, group=group)
 
         # Для теста
-        # response = manager.loader.load_test_schedule()
+        response = manager.loader.load_test_schedule()
 
         # Парсинг
-        parsed_response = manager.parser.parse(json=response)
+        parsed_response = manager.parser.parse(schedule_json=response, group=group)
 
         return HttpResponse(
             json.dumps(parsed_response),
