@@ -15,12 +15,12 @@ class MainView(View):
         manager = ScheduleManager()
 
         # Реальный запрос на "raspisanie.bmstu.ru".
-        response = manager.loader.load_schedule(faculty="ИУ", department=5, course=3, group=53)
+        response = manager.loader.load_schedule(faculty="ИУ", department=5, course=3, group=63)
         print("Ответ сервака: " + str(response))
 
         # Тестовый запрос
-        test_response = manager.loader.load_test_schedule()
-        print("Тест: " + str(test_response))
+        #test_response = manager.loader.load_test_schedule()
+        #print("Тест: " + str(test_response))
 
         #print("Парсинг..")
         #response_dict = manager.parser.parse(json=test_response)
