@@ -29,8 +29,8 @@ class ScheduleManager:
     def current_week_type(self):
 
         # Определяем тип недели.
-        week_type = "числитель"
+        week_type = "numerator"
         if self.current_week_number() % 2 == 0:
-            week_type = "знаменатель"
+            week_type = "denominator"
 
         return week_type

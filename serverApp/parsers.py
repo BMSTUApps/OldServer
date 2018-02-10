@@ -4,12 +4,12 @@ import random
 
 class ScheduleParser:
 
-    def parse(self, schedule_json, group):
+    def parse(self, json, group, week_number, week_type):
 
         # JSON Layer
 
         # Разбиваем все занятия на две недели (числитель и знаменатель).
-        json = self.divide(json=schedule_json)
+        json = self.divide(json=json)
 
         # Удаляем ненужные символы.
         json = self.remove_symbols(json=json)
@@ -20,15 +20,16 @@ class ScheduleParser:
         # Поэтому на этом уровне мы будем видоизменять JSON в нужный вид.
         # Подробности тут - github.com/BMSTUScheduleTeam/BMSTUScheduleServer/issues/9
 
-        json = self.transform_json(json=json, group=group)
+        json = self.transform_json(json=json, group=group, week_number=week_number, week_type=week_type)
 
         return json
 
     def divide(self, json):
 
+        # Проверяем на пустой json.
         json_list = list(json)
         if len(json_list) == 0:
-            return {"nominator": None, "denominator": None}
+            return {"numerator": [], "denominator": []}
 
         days = json[0]['studyWeek']
 
@@ -79,7 +80,7 @@ class ScheduleParser:
             denominator_day["periods"] = denominator_periods
             denominator_days.append(denominator_day)
 
-        return {"nominator": nominator_days, "denominator": denominator_days}
+        return {"numerator": nominator_days, "denominator": denominator_days}
 
     def remove_symbols(self, json):
 
@@ -148,52 +149,70 @@ class ScheduleParser:
 
         return schedule
 
-    def transform_json(self, json, group):
+    def transform_json(self, json, group, week_number, week_type):
 
         # Метод для преобразования расписания в нужный формат.
 
+        weeks_key = "weeks"
+        days_key = "days"
+        group_key = "group"
+        classes_key = "classes"
+
         new_dict = dict()
-        new_dict['group'] = group
-        new_dict['week'] = []
+        new_dict[group_key] = group
+        new_dict[weeks_key] = []
+
         ind_week = 0
 
         for week_type in json:
-            new_dict['week'].append({})
-            new_dict['week'][ind_week]['id'] = random.randint(1, 10000)
-            new_dict['week'][ind_week]['number'] = random.randint(1, 10000)
-            new_dict['week'][ind_week]['type'] = week_type
-            new_dict['week'][ind_week]['days'] = []
+
+            new_dict[weeks_key].append({})
+            new_dict[weeks_key][ind_week]['id'] = random.randint(1, 10000)
+            new_dict[weeks_key][ind_week]['number'] = random.randint(1, 10000)
+            new_dict[weeks_key][ind_week]['type'] = week_type
+            new_dict[weeks_key][ind_week][days_key] = []
+
             ind_day = 0
+
             for day in json[str(week_type)]:
-                new_dict['week'][ind_week]['days'].append({})
-                new_dict['week'][ind_week]['days'][ind_day]['id'] = random.randint(1, 10000)
-                new_dict['week'][ind_week]['days'][ind_day]['name'] = day['title']
-                new_dict['week'][ind_week]['days'][ind_day]['classes'] = []
+
+                new_dict[weeks_key][ind_week][days_key].append({})
+                new_dict[weeks_key][ind_week][days_key][ind_day]['id'] = random.randint(1, 10000)
+                new_dict[weeks_key][ind_week][days_key][ind_day]['name'] = day['title']
+                new_dict[weeks_key][ind_week][days_key][ind_day][classes_key] = []
+
                 ind_class = 0
+
                 for period in day['periods']:
-                    new_dict['week'][ind_week]['days'][ind_day]['classes'].append({})
-                    if period['studyClasses'] != []:
-                        new_dict['week'][ind_week]['days'][ind_day]['classes'][ind_class]['id'] = \
+
+                    if len(period['studyClasses']) > 0:
+
+                        new_dict[weeks_key][ind_week][days_key][ind_day][classes_key].append({})
+
+                        new_dict[weeks_key][ind_week][days_key][ind_day][classes_key][ind_class]['id'] = \
                             random.randint(1, 10000)
-                        new_dict['week'][ind_week]['days'][ind_day]['classes'][ind_class]['name'] = \
+                        new_dict[weeks_key][ind_week][days_key][ind_day][classes_key][ind_class]['name'] = \
                             period['studyClasses'][0]['studyClassTitle']
                         # В скобках обычно пишут тип занятия
-                        new_dict['week'][ind_week]['days'][ind_day]['classes'][ind_class]['type'] = \
+                        new_dict[weeks_key][ind_week][days_key][ind_day][classes_key][ind_class]['type'] = \
                             str(period['studyClasses'][0]['studyClassTitle']).split(' ')[0]
-                        new_dict['week'][ind_week]['days'][ind_day]['classes'][ind_class]['location'] = \
+                        new_dict[weeks_key][ind_week][days_key][ind_day][classes_key][ind_class]['location'] = \
                             period['studyClasses'][0]['studyClassRoom']
-                        new_dict['week'][ind_week]['days'][ind_day]['classes'][ind_class]['teacher'] = \
+                        new_dict[weeks_key][ind_week][days_key][ind_day][classes_key][ind_class]['teacher'] = \
                             period['studyClasses'][0]['studyClassLecturer']
-                        new_dict['week'][ind_week]['days'][ind_day]['classes'][ind_class]['teacher_id'] = \
+                        new_dict[weeks_key][ind_week][days_key][ind_day][classes_key][ind_class]['teacher_id'] = \
                             random.randint(1, 10000)
                         # Пока что решил не запариваться, накидать до кучи время начала занятия
-                        new_dict['week'][ind_week]['days'][ind_day]['classes'][ind_class]['start_time'] = \
+                        new_dict[weeks_key][ind_week][days_key][ind_day][classes_key][ind_class]['start_time'] = \
                             random.randint(1, 10000)
                         # Пока что решил не запариваться, накидать до кучи время окончания занятия
-                        new_dict['week'][ind_week]['days'][ind_day]['classes'][ind_class]['end_time'] = \
+                        new_dict[weeks_key][ind_week][days_key][ind_day][classes_key][ind_class]['end_time'] = \
                             random.randint(1, 10000)
+
                         ind_class += 1
+
                 ind_day += 1
+
             ind_week += 1
 
         return new_dict

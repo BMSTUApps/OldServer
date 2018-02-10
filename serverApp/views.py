@@ -22,10 +22,10 @@ class MainView(View):
         test_response = manager.loader.load_test_schedule()
         print("Тест: " + str(test_response))
 
-        print("Парсинг..")
-        response_dict = manager.parser.parse(json=test_response)
-        print("Числитель: " + str(response_dict["nominator"]))
-        print("Знаменатель: " + str(response_dict["denominator"]))
+        #print("Парсинг..")
+        #response_dict = manager.parser.parse(json=test_response)
+        #print("Числитель: " + str(response_dict["nominator"]))
+        #print("Знаменатель: " + str(response_dict["denominator"]))
 
         return HttpResponse(
             json.dumps(response, ensure_ascii=False),

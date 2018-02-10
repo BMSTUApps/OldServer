@@ -31,7 +31,9 @@ class ScheduleView(View):
         response = manager.loader.load_test_schedule()
 
         # Парсинг
-        parsed_response = manager.parser.parse(schedule_json=response, group=group)
+        week_number = manager.current_week_number()
+        week_type = manager.current_week_type()
+        parsed_response = manager.parser.parse(json=response, group=group_string, week_number=week_number, week_type=week_type)
 
         return HttpResponse(
             json.dumps(parsed_response, ensure_ascii=False),
