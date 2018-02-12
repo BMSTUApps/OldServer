@@ -25,7 +25,7 @@ SECRET_KEY = '55vgj@$f35i(eg*p=x14je614_-qw_r3msxtic+vo1b^ej^asv'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['schedule.bestk1ng.ru']
 
 
 # Application definition
