@@ -25,10 +25,10 @@ class ScheduleView(View):
         course = int(math.ceil(int(group/10)/2.0))
 
         # Запрос на "raspisanie.bmstu.ru".
-        #response = manager.loader.load_schedule(faculty=faculty, department=department, course=course, group=group)
+        response = manager.loader.load_schedule(faculty=faculty, department=department, course=course, group=group)
 
         # Для теста
-        response = manager.loader.load_test_schedule()
+        #response = manager.loader.load_test_schedule()
 
         # Парсинг
         week_number = manager.current_week_number()
